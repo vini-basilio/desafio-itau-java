@@ -14,13 +14,22 @@ import edu.itau.vaga.handler.BusinessException;
 
 import java.util.DoubleSummaryStatistics;
 
+/**
+ * Serviço responsável por gerenciar as transações e suas regras de negócio.
+ * Mantém o histórico de transações e calcula estatísticas.
+ */
 @Component
 public class TransacaoServices {
     @Autowired
     private TransacoesHistorico transacoesHistorico;
 
+    /**
+     * Valida e registra uma nova transação.
+     * 
+     * @param transacao DTO contendo os dados da transação
+     * @throws BusinessException se a transação violar alguma regra de negócio
+     */
     public void postTransacao(TransacaoDto transacao) {
-
         if (transacao.getValor() < 0) {
             throw new BusinessException("O valor da transação não pode ser negativo");
         }
@@ -41,13 +50,19 @@ public class TransacaoServices {
         transacoesHistorico.limparHistorico();
     }
 
-    public DoubleSummaryStatistics estatisticaTransacoes(Integer tempo) {
-
-        int segundos = 60;
-        if (!(tempo == null)) {
-            segundos = tempo;
+    /**
+     * Calcula estatísticas das transações dentro de um período.
+     * 
+     * @param segundos Período em segundos para filtrar as transações (opcional,
+     *                 padrão 60s)
+     * @return Estatísticas das transações no período
+     */
+    public DoubleSummaryStatistics estatisticaTransacoes(Integer segundos) {
+        int segundosFiltro = 60;
+        if (!(segundos == null)) {
+            segundosFiltro = segundos;
         }
-        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.of("-03:00")).minusSeconds(segundos);
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.of("-03:00")).minusSeconds(segundosFiltro);
 
         var filteredTransacoes = transacoesHistorico.getTransacoes()
                 .stream()

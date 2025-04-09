@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Controller responsável por expor os endpoints da API de transações.
+ * Gerencia as requisições HTTP e delega a lógica de negócio para o serviço.
+ */
 @RestController
 public class Transacao {
     @Autowired
@@ -26,19 +30,35 @@ public class Transacao {
 
     private static final Logger logger = LoggerFactory.getLogger(Transacao.class);
 
+    /**
+     * Endpoint para listar todas as transações.
+     * 
+     * @return Lista de todas as transações registradas
+     */
     @GetMapping("/")
     public List<TransacaoDto> get() {
         return transacaoServices.getTransacoes();
     }
 
+    /**
+     * Endpoint para criar uma nova transação.
+     * Valida o JSON recebido e delega para o serviço.
+     * 
+     * @param transacao DTO com os dados da transação
+     * @return ResponseEntity com status 201 em caso de sucesso
+     */
     @PostMapping("/transacao")
     public ResponseEntity<Void> postTransacao(@Valid @RequestBody TransacaoDto transacao) {
         transacaoServices.postTransacao(transacao);
         logger.info("Transacao recebida: {}", transacao);
-
         return ResponseEntity.status(201).build();
     }
 
+    /**
+     * Endpoint para limpar o histórico de transações.
+     * 
+     * @return ResponseEntity com status 200 em caso de sucesso
+     */
     @DeleteMapping("/transacao")
     public ResponseEntity<Void> deleteTransacao() {
         transacaoServices.limparHistorico();
@@ -46,6 +66,12 @@ public class Transacao {
         return ResponseEntity.status(200).build();
     }
 
+    /**
+     * Endpoint para obter estatísticas das transações.
+     * 
+     * @param segundos Período em segundos para filtrar as transações (opcional)
+     * @return ResponseEntity com as estatísticas das transações
+     */
     @GetMapping("/estatisticas")
     public ResponseEntity<DoubleSummaryStatistics> getEstatisticas(@PathVariable(required = false) Integer segundos) {
         DoubleSummaryStatistics estatisticas = transacaoServices.estatisticaTransacoes(segundos);
