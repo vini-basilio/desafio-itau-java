@@ -1,5 +1,6 @@
 package edu.itau.vaga.controllers;
 
+import edu.itau.vaga.dtos.Estatisticas;
 import edu.itau.vaga.dtos.TransacaoDto;
 import edu.itau.vaga.services.TransacaoServices;
 import jakarta.validation.Valid;
@@ -38,4 +39,9 @@ public class Transacao {
         return ResponseEntity.status(200).build();
     }
 
+    @GetMapping("/estatisticas")
+    public ResponseEntity<Estatisticas> getEstatisticas() {
+        Estatisticas estatisticas = transacaoServices.estatisticaTransacoes();
+        return ResponseEntity.ok(estatisticas);
+    }
 }

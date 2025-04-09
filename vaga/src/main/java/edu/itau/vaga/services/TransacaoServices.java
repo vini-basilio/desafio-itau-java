@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.itau.vaga.TransacoesHistorico;
+import edu.itau.vaga.dtos.Estatisticas;
 import edu.itau.vaga.dtos.TransacaoDto;
 import edu.itau.vaga.handler.BusinessException;
 
@@ -36,5 +37,29 @@ public class TransacaoServices {
 
     public void limparHistorico() {
         transacoesHistorico.limparHistorico();
+    }
+
+    public Estatisticas estatisticaTransacoes() {
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.of("-03:00")).plusMinutes(1);
+
+        Estatisticas estatisticas = new Estatisticas();
+
+        for (TransacaoDto transacao : transacoesHistorico.getTransacoes()) {
+
+            if (transacao.getDataHora().isBefore(now)) {
+
+                estatisticas.setCount(estatisticas.getCount() + 1);
+                estatisticas.setSum(estatisticas.getSum() + transacao.getValor());
+                estatisticas.setAvg(estatisticas.getAvg() + transacao.getValor());
+                estatisticas.setMin(Math.min(estatisticas.getMin(), transacao.getValor()));
+                estatisticas.setMax(Math.max(estatisticas.getMax(), transacao.getValor()));
+            }
+        }
+
+        if (estatisticas.getCount() > 0) {
+            estatisticas.setAvg(estatisticas.getSum() / estatisticas.getCount());
+        }
+
+        return estatisticas;
     }
 }
