@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.itau.vaga.TransacoesHistorico;
-import edu.itau.vaga.dtos.Estatisticas;
+
 import edu.itau.vaga.dtos.TransacaoDto;
 import edu.itau.vaga.handler.BusinessException;
+
+import java.util.DoubleSummaryStatistics;
 
 @Component
 public class TransacaoServices {
@@ -39,27 +41,20 @@ public class TransacaoServices {
         transacoesHistorico.limparHistorico();
     }
 
-    public Estatisticas estatisticaTransacoes() {
-        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.of("-03:00")).plusMinutes(1);
+    public DoubleSummaryStatistics estatisticaTransacoes(Integer tempo) {
 
-        Estatisticas estatisticas = new Estatisticas();
-
-        for (TransacaoDto transacao : transacoesHistorico.getTransacoes()) {
-
-            if (transacao.getDataHora().isBefore(now)) {
-
-                estatisticas.setCount(estatisticas.getCount() + 1);
-                estatisticas.setSum(estatisticas.getSum() + transacao.getValor());
-                estatisticas.setAvg(estatisticas.getAvg() + transacao.getValor());
-                estatisticas.setMin(Math.min(estatisticas.getMin(), transacao.getValor()));
-                estatisticas.setMax(Math.max(estatisticas.getMax(), transacao.getValor()));
-            }
+        int segundos = 60;
+        if (!(tempo == null)) {
+            segundos = tempo;
         }
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.of("-03:00")).minusSeconds(segundos);
 
-        if (estatisticas.getCount() > 0) {
-            estatisticas.setAvg(estatisticas.getSum() / estatisticas.getCount());
-        }
+        var filteredTransacoes = transacoesHistorico.getTransacoes()
+                .stream()
+                .filter(transacao -> transacao.getDataHora().isAfter(now))
+                .mapToDouble(TransacaoDto::getValor)
+                .summaryStatistics();
 
-        return estatisticas;
+        return filteredTransacoes;
     }
 }
