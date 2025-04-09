@@ -5,11 +5,13 @@ import java.time.ZoneOffset;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import edu.itau.vaga.TransacoesHistorico;
 import edu.itau.vaga.dtos.TransacaoDto;
 import edu.itau.vaga.handler.BusinessException;
 
+@Component
 public class TransacaoServices {
     @Autowired
     private TransacoesHistorico transacoesHistorico;
