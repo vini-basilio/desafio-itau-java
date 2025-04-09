@@ -2,12 +2,19 @@ package edu.itau.vaga.services;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.itau.vaga.TransacoesHistorico;
 import edu.itau.vaga.dtos.TransacaoDto;
 import edu.itau.vaga.handler.BusinessException;
 
 public class TransacaoServices {
-    public static void postTransacao(TransacaoDto transacao) {
+    @Autowired
+    private TransacoesHistorico transacoesHistorico;
+
+    public void postTransacao(TransacaoDto transacao) {
 
         if (transacao.getValor() < 0) {
             throw new BusinessException("O valor da transação não pode ser negativo");
@@ -17,5 +24,15 @@ public class TransacaoServices {
         if (transacao.getDataHora().isAfter(OffsetDateTime.now(offsetBrasil))) {
             throw new BusinessException("A data da transação não pode ser futura");
         }
+
+        transacoesHistorico.adicionarTransacao(transacao);
+    }
+
+    public List<TransacaoDto> getTransacoes() {
+        return transacoesHistorico.getTransacoes();
+    }
+
+    public void limparHistorico() {
+        transacoesHistorico.limparHistorico();
     }
 }

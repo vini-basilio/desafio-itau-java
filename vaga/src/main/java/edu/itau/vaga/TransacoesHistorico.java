@@ -19,4 +19,8 @@ public class TransacoesHistorico {
         return transacoes;
     }
 
+    public void limparHistorico() {
+        transacoes.clear();
+    }
+
 }
