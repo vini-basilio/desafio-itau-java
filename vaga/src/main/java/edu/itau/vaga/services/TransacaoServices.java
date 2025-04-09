@@ -58,7 +58,7 @@ public class TransacaoServices {
      */
     public EstatisticasDto estatisticaTransacoes(Integer segundos) {
         int segundosFiltro = 60;
-        if (!(segundos == null)) {
+        if (!(segundos == null || segundos < 1)) {
             segundosFiltro = segundos;
         }
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.of("-03:00")).minusSeconds(segundosFiltro);
