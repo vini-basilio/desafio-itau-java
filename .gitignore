@@ -1,4 +1,0 @@
-.vscode/settings.json
-
-# Ignorar a pasta target gerada pelo Maven
-target/
