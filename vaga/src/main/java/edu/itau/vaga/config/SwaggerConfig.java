@@ -13,11 +13,11 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("API de Vagas")
+                        .title("API de transações")
                         .version("1.0")
-                        .description("API para gerenciamento de vagas")
+                        .description("API para gerenciamento de transações feita para o desafio técnico do Itaú")
                         .contact(new Contact()
-                                .name("Seu Nome")
-                                .email("seu.email@exemplo.com")));
+                                .name("Vinícius Basílio")
+                                .email("vini.ba.dev@gmail.com")));
     }
 } 
