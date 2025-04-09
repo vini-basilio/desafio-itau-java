@@ -20,7 +20,8 @@ public class TransacoesHistorico {
     }
 
     public void limparHistorico() {
-        transacoes.clear();
+        if (!transacoes.isEmpty()) {
+            transacoes.clear();
+        }
     }
-
 }
