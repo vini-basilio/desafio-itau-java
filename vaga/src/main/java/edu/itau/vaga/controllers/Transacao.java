@@ -1,10 +1,10 @@
 package edu.itau.vaga.controllers;
 
 import edu.itau.vaga.dtos.TransacaoDto;
+import edu.itau.vaga.dtos.EstatisticasDto;
 import edu.itau.vaga.services.TransacaoServices;
 import jakarta.validation.Valid;
 
-import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,8 +73,8 @@ public class Transacao {
      * @return ResponseEntity com as estatísticas das transações
      */
     @GetMapping("/estatisticas")
-    public ResponseEntity<DoubleSummaryStatistics> getEstatisticas(@PathVariable(required = false) Integer segundos) {
-        DoubleSummaryStatistics estatisticas = transacaoServices.estatisticaTransacoes(segundos);
+    public ResponseEntity<EstatisticasDto> getEstatisticas(@PathVariable(required = false) Integer segundos) {
+        EstatisticasDto estatisticas = transacaoServices.estatisticaTransacoes(segundos);
         logger.info("Estatisticas retornadas: {}", estatisticas);
         return ResponseEntity.ok(estatisticas);
     }

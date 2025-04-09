@@ -10,9 +10,8 @@ import org.springframework.stereotype.Component;
 import edu.itau.vaga.TransacoesHistorico;
 
 import edu.itau.vaga.dtos.TransacaoDto;
+import edu.itau.vaga.dtos.EstatisticasDto;
 import edu.itau.vaga.handler.BusinessException;
-
-import java.util.DoubleSummaryStatistics;
 
 /**
  * Serviço responsável por gerenciar as transações e suas regras de negócio.
@@ -57,7 +56,7 @@ public class TransacaoServices {
      *                 padrão 60s)
      * @return Estatísticas das transações no período
      */
-    public DoubleSummaryStatistics estatisticaTransacoes(Integer segundos) {
+    public EstatisticasDto estatisticaTransacoes(Integer segundos) {
         int segundosFiltro = 60;
         if (!(segundos == null)) {
             segundosFiltro = segundos;
@@ -70,6 +69,11 @@ public class TransacaoServices {
                 .mapToDouble(TransacaoDto::getValor)
                 .summaryStatistics();
 
-        return filteredTransacoes;
+        return new EstatisticasDto(
+                filteredTransacoes.getCount(),
+                filteredTransacoes.getSum(),
+                filteredTransacoes.getAverage(),
+                filteredTransacoes.getMin(),
+                filteredTransacoes.getMax());
     }
 }
