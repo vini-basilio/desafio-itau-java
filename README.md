@@ -125,6 +125,7 @@ A aplicação utiliza SLF4J. Logs são gerados para:
 - ✅ Swagger para documentação interativa  
 - ✅ Tratamento de erros com `@ControllerAdvice` (customização opcional)
 - ✅ Configuração do tempo da janela via parâmetro de query  
+- ✅ Implementação de logs com SLF4J para monitoramento e debugging
 
 
 
