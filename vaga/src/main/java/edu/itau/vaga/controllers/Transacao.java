@@ -31,16 +31,6 @@ public class Transacao {
     private static final Logger logger = LoggerFactory.getLogger(Transacao.class);
 
     /**
-     * Endpoint para listar todas as transações.
-     * 
-     * @return Lista de todas as transações registradas
-     */
-    @GetMapping("/")
-    public List<TransacaoDto> get() {
-        return transacaoServices.getTransacoes();
-    }
-
-    /**
      * Endpoint para criar uma nova transação.
      * Valida o JSON recebido e delega para o serviço.
      * 
