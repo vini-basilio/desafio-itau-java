@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.itau.vaga.TransacoesHistorico;
 
@@ -19,6 +21,7 @@ import edu.itau.vaga.handler.BusinessException;
  */
 @Component
 public class TransacaoServices {
+    private static final Logger logger = LoggerFactory.getLogger(TransacaoServices.class);
     @Autowired
     private TransacoesHistorico transacoesHistorico;
 
@@ -30,11 +33,14 @@ public class TransacaoServices {
      */
     public void postTransacao(TransacaoDto transacao) {
         if (transacao.getValor() < 0) {
+
+            logger.error("Valor negativo detectado: {}", transacao.getValor());
             throw new BusinessException("O valor da transação não pode ser negativo");
         }
 
         ZoneOffset offsetBrasil = ZoneOffset.of("-03:00");
         if (transacao.getDataHora().isAfter(OffsetDateTime.now(offsetBrasil))) {
+            logger.error("Data futura detectada: {}", transacao.getDataHora());
             throw new BusinessException("A data da transação não pode ser futura");
         }
 
